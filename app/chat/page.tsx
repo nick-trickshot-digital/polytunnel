@@ -22,6 +22,18 @@ export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const showToast = useToast();
 
+  // Lock body scroll on iOS — the only reliable way to prevent Safari viewport shift
+  useEffect(() => {
+    document.body.style.position = 'fixed';
+    document.body.style.inset = '0';
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.position = '';
+      document.body.style.inset = '';
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   useEffect(() => {
     fetch('/api/chat/history')
       .then(res => res.json())
@@ -169,7 +181,7 @@ export default function ChatPage() {
       </div>
 
       {/* Messages */}
-      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-4 md:px-6 py-5 space-y-4">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto overscroll-y-contain px-4 md:px-6 py-5 space-y-4">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-earth-500 text-lg font-medium">Loading chat history...</div>
