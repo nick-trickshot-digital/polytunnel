@@ -452,7 +452,7 @@ export default function CalendarPage() {
       {actionChoice && (
         <>
           <div className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm" onClick={() => setActionChoice(null)} />
-          <div className="fixed inset-0 flex items-center justify-center z-[61] px-4">
+          <div className="fixed inset-0 flex items-center justify-center z-[61] px-4 pb-28 md:pb-0">
             <div className="bg-white rounded-2xl shadow-2xl border border-earth-200 p-6 w-full max-w-sm animate-slide-up">
               <div className="text-center mb-5">
                 <PlantIcon name={actionChoice.plantName} size={48} />

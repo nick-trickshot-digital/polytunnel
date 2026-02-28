@@ -156,9 +156,9 @@ export default function HomePage() {
           <Image
             src="/images/ant.png"
             alt="Ant with his watering can"
-            width={80}
-            height={80}
-            className="w-20 h-20 mx-auto mb-5 animate-bounce object-contain"
+            width={160}
+            height={160}
+            className="w-36 h-36 mx-auto mb-5 animate-bounce object-contain"
             priority
           />
           <p className="text-xl text-earth-500 font-semibold">Loading your tunnel...</p>

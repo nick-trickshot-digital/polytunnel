@@ -128,9 +128,9 @@ export default function ChatPage() {
   ];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] md:h-screen max-w-3xl mx-auto">
+    <div className="flex flex-col h-[calc(100dvh-5rem)] md:h-screen max-w-3xl mx-auto">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-earth-200 bg-white/90 backdrop-blur-sm">
+      <div className="px-5 py-3 border-b border-earth-200 bg-white/90 backdrop-blur-sm">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h1 className="text-2xl font-800 text-earth-800" style={{ fontFamily: 'var(--font-display)' }}>
@@ -255,7 +255,7 @@ export default function ChatPage() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about your tunnel..."
+            placeholder="Ask Vickie..."
             rows={1}
             className="flex-1 px-5 py-4 border border-earth-300 rounded-2xl text-lg focus:ring-2 focus:ring-tunnel-300 focus:border-tunnel-400 outline-none resize-none max-h-32 font-medium"
             disabled={isStreaming}

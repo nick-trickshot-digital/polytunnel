@@ -145,19 +145,19 @@ export default function TasksPage() {
         >
           Tasks
         </h1>
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="text-lg font-semibold px-5 py-4 bg-white text-tunnel-700 rounded-2xl hover:bg-tunnel-50 border border-tunnel-300 transition-colors disabled:opacity-50"
+            className="text-sm md:text-lg font-semibold px-3 py-2.5 md:px-5 md:py-4 bg-white text-tunnel-700 rounded-xl md:rounded-2xl hover:bg-tunnel-50 border border-tunnel-300 transition-colors disabled:opacity-50"
           >
-            {generating ? '\u{1F9E0} Thinking...' : '\u{1F9E0} Suggest Tasks'}
+            {generating ? '\u{1F9E0} Thinking...' : '\u{1F9E0} Suggest'}
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className="text-lg font-bold px-5 py-4 bg-tunnel-600 text-white rounded-2xl hover:bg-tunnel-700 border border-tunnel-700 transition-colors shadow-sm"
+            className="text-sm md:text-lg font-bold px-3 py-2.5 md:px-5 md:py-4 bg-tunnel-600 text-white rounded-xl md:rounded-2xl hover:bg-tunnel-700 border border-tunnel-700 transition-colors shadow-sm"
           >
-            + Add Task
+            + Add
           </button>
         </div>
       </div>
