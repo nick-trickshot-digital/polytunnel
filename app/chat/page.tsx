@@ -128,7 +128,7 @@ export default function ChatPage() {
   ];
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-5rem)] md:h-screen max-w-3xl mx-auto">
+    <div className="flex flex-col h-[calc(100dvh-5rem)] md:h-screen max-w-3xl mx-auto -mb-24 md:mb-0 overflow-hidden">
       {/* Header */}
       <div className="px-5 py-3 border-b border-earth-200 bg-white/90 backdrop-blur-sm">
         <div className="flex items-start justify-between gap-3">
@@ -247,9 +247,9 @@ export default function ChatPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input area — big and easy to use */}
-      <div className="px-4 md:px-6 py-4 border-t border-earth-200 bg-white/90 backdrop-blur-sm">
-        <div className="flex gap-3 items-end">
+      {/* Input area */}
+      <div className="px-3 md:px-6 py-3 md:py-4 border-t border-earth-200 bg-white/90 backdrop-blur-sm flex-shrink-0">
+        <div className="flex gap-2 md:gap-3 items-end">
           <textarea
             ref={inputRef}
             value={input}
@@ -257,13 +257,13 @@ export default function ChatPage() {
             onKeyDown={handleKeyDown}
             placeholder="Ask Vickie..."
             rows={1}
-            className="flex-1 px-5 py-4 border border-earth-300 rounded-2xl text-lg focus:ring-2 focus:ring-tunnel-300 focus:border-tunnel-400 outline-none resize-none max-h-32 font-medium"
+            className="flex-1 px-4 py-3 md:px-5 md:py-4 border border-earth-300 rounded-2xl text-base md:text-lg focus:ring-2 focus:ring-tunnel-300 focus:border-tunnel-400 outline-none resize-none max-h-28 font-medium"
             disabled={isStreaming}
           />
           <button
             onClick={handleSend}
             disabled={isStreaming || !input.trim()}
-            className="px-8 py-4 bg-tunnel-600 text-white rounded-2xl text-lg font-bold hover:bg-tunnel-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0 shadow-sm active:scale-[0.97]"
+            className="px-5 py-3 md:px-8 md:py-4 bg-tunnel-600 text-white rounded-2xl text-base md:text-lg font-bold hover:bg-tunnel-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0 shadow-sm active:scale-[0.97]"
           >
             Send
           </button>
