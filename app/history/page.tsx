@@ -68,7 +68,7 @@ export default function HistoryPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 md:py-8 space-y-6 animate-fade-in">
       <h1
-        className="text-3xl font-extrabold text-earth-800"
+        className="text-3xl font-800 text-earth-800"
         style={{ fontFamily: 'var(--font-display)' }}
       >
         Garden Records

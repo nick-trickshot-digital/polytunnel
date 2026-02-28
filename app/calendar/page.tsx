@@ -120,8 +120,8 @@ export default function CalendarPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-5 md:py-8 space-y-5">
       <div>
-        <h1 className="text-3xl font-900 text-earth-800" style={{ fontFamily: 'var(--font-display)' }}>
-          📅 Seasonal Calendar
+        <h1 className="text-3xl font-800 text-earth-800" style={{ fontFamily: 'var(--font-display)' }}>
+          Seasonal Calendar
         </h1>
         <p className="text-lg text-earth-500 font-semibold mt-1">
           What to sow, plant, and harvest each month

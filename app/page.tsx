@@ -561,36 +561,20 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════════════
-          AI SUGGESTIONS — What you could do next
-          ═══════════════════════════════════════════════ */}
-      <div className="relative">
-        {/* Visual separator */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-earth-300 via-earth-200 to-transparent" />
-          <span className="text-sm font-semibold text-earth-500 uppercase tracking-wider whitespace-nowrap">
-            Suggestions for you
-          </span>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-earth-200 to-earth-300" />
-        </div>
+      {/* ── What to Plant Now — prominent when tunnel is mostly empty ── */}
+      {emptyBeds.length > beds.length / 2 && (
+        <WhatToPlantNow onPlantAction={handleSeasonalPlantAction} />
+      )}
 
-        <div className="bg-earth-50/50 -mx-4 px-4 py-5 md:py-4 rounded-2xl border border-earth-200/60 space-y-6 md:space-y-5">
-          {/* What to Plant Now — prominent when tunnel is mostly empty */}
-          {emptyBeds.length > beds.length / 2 && (
-            <WhatToPlantNow onPlantAction={handleSeasonalPlantAction} />
-          )}
-
-          {/* AI Recommendations */}
-          <div>
-            <h3 className="text-lg font-800 text-earth-700 mb-3 md:mb-2 flex items-center gap-2" style={{ fontFamily: 'var(--font-display)' }}>
-              🧠 Smart Suggestions
-            </h3>
-            <RecommendationCards
-              onPlantAction={handlePlantAction}
-              onTaskAction={handleTaskAction}
-            />
-          </div>
-        </div>
+      {/* ── Smart Suggestions ── */}
+      <div>
+        <h2 className="text-xl font-800 text-earth-800 mb-3 md:mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+          Smart Suggestions
+        </h2>
+        <RecommendationCards
+          onPlantAction={handlePlantAction}
+          onTaskAction={handleTaskAction}
+        />
       </div>
 
       {/* ── Planting modal (triggered by recommendation actions) ── */}

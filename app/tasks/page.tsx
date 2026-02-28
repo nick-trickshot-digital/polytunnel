@@ -140,7 +140,7 @@ export default function TasksPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1
-          className="text-3xl font-extrabold text-earth-800"
+          className="text-3xl font-800 text-earth-800"
           style={{ fontFamily: 'var(--font-display)' }}
         >
           Tasks

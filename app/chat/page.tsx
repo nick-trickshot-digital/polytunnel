@@ -146,8 +146,8 @@ export default function ChatPage() {
       <div className="px-5 py-3 border-b border-earth-200 bg-white/90 backdrop-blur-sm flex-shrink-0">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-800 text-earth-800" style={{ fontFamily: 'var(--font-display)' }}>
-              💬 Vickie
+            <h1 className="text-3xl font-800 text-earth-800" style={{ fontFamily: 'var(--font-display)' }}>
+              Vickie
             </h1>
             <p className="text-base text-earth-500 font-medium mt-0.5">
               Your growing assistant
