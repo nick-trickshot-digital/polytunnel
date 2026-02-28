@@ -104,10 +104,10 @@ export function PlantDetailPanel({
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/40 z-40 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/40 z-[55] backdrop-blur-sm" onClick={onClose} />
 
       {/* Panel */}
-      <div role="dialog" aria-modal="true" aria-label={`${plantName} details`} className="fixed bottom-0 left-0 right-0 md:bottom-auto md:top-0 md:right-0 md:left-auto md:w-[480px] z-50 bg-white rounded-t-3xl md:rounded-none md:rounded-l-3xl shadow-2xl max-h-[85vh] md:max-h-screen md:h-screen flex flex-col overflow-hidden animate-slide-up">
+      <div role="dialog" aria-modal="true" aria-label={`${plantName} details`} className="fixed bottom-0 left-0 right-0 md:bottom-auto md:top-0 md:right-0 md:left-auto md:w-[480px] z-[56] bg-white rounded-t-3xl md:rounded-none md:rounded-l-3xl shadow-2xl max-h-[85vh] md:max-h-screen md:h-screen flex flex-col overflow-hidden animate-slide-up">
 
         {/* Header with hero image */}
         <div className="relative">

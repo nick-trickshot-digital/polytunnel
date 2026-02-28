@@ -217,39 +217,41 @@ export default function CalendarPage() {
                 {data.plantedThisMonth.map(p => (
                   <div
                     key={p.id}
-                    className={`flex items-center justify-between gap-3 px-4 py-3 rounded-xl border ${
+                    className={`px-4 py-3 rounded-xl border ${
                       p.status === 'finished' ? 'bg-earth-50 border-earth-200 opacity-60' :
                       p.status === 'failed' ? 'bg-red-50/30 border-red-200 opacity-60' :
                       'bg-tunnel-50 border-tunnel-200'
                     }`}
                   >
-                    <div className="flex-1 min-w-0">
-                      <span className="text-base font-bold text-earth-800">{p.plantName}</span>
-                      {p.variety && (
-                        <span className="text-sm text-earth-500 ml-1.5">({p.variety})</span>
-                      )}
-                      <span className="text-sm text-earth-500 ml-2">Bed {p.bedId}</span>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      {p.dateSown && (
-                        <span className="text-sm font-semibold text-earth-500">
-                          Sown {new Date(p.dateSown + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-                        </span>
-                      )}
-                      <span className="text-sm font-bold text-tunnel-600">
-                        Planted {new Date(p.datePlanted + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-                      </span>
-                      <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="text-base font-bold text-earth-800">{p.plantName}</span>
+                        {p.variety && (
+                          <span className="text-sm text-earth-500">({p.variety})</span>
+                        )}
+                        <span className="text-sm text-earth-500">· {p.bedId}</span>
+                      </div>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-lg flex-shrink-0 ${
                         p.status === 'growing' ? 'bg-tunnel-100 text-tunnel-700' :
                         p.status === 'finished' ? 'bg-earth-100 text-earth-500' :
                         p.status === 'failed' ? 'bg-red-100 text-red-600' :
                         'bg-earth-100 text-earth-500'
                       }`}>
-                        {p.status === 'growing' ? 'Still growing' :
+                        {p.status === 'growing' ? 'Growing' :
                          p.status === 'finished' ? 'Done' :
                          p.status === 'failed' ? 'Didn\'t make it' :
                          p.status}
                       </span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-sm font-semibold text-tunnel-600">
+                        Planted {new Date(p.datePlanted + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                      </span>
+                      {p.dateSown && (
+                        <span className="text-sm font-medium text-earth-400">
+                          · Sown {new Date(p.dateSown + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))}
