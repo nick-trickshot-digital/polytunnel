@@ -311,7 +311,7 @@ export default function CalendarPage() {
           </div>
 
           {/* Sow indoors — with plant-it buttons */}
-          <section className={`bg-white rounded-2xl p-5 md:p-6 border border-amber-200 card-texture shadow-sm animate-fade-in overflow-visible ${bedPickerOpen?.startsWith('sow-') ? 'relative z-20' : ''}`}>
+          <section className={`bg-white rounded-2xl p-5 md:p-6 border border-amber-200 card-texture shadow-sm animate-fade-in overflow-visible ${bedPickerOpen?.startsWith('sow-') ? 'relative z-[55]' : ''}`}>
             <h3 className="text-xl font-800 text-amber-800 mb-3 flex items-center gap-2" style={{ fontFamily: 'var(--font-display)' }}>
               🌱 Start Seeds in Pots / Trays
             </h3>
@@ -359,7 +359,7 @@ export default function CalendarPage() {
           </section>
 
           {/* Transplant — with plant-it buttons */}
-          <section className={`bg-white rounded-2xl p-5 md:p-6 border border-tunnel-200 card-texture shadow-sm animate-fade-in overflow-visible ${bedPickerOpen?.startsWith('tp-') ? 'relative z-20' : ''}`}>
+          <section className={`bg-white rounded-2xl p-5 md:p-6 border border-tunnel-200 card-texture shadow-sm animate-fade-in overflow-visible ${bedPickerOpen?.startsWith('tp-') ? 'relative z-[55]' : ''}`}>
             <h3 className="text-xl font-800 text-tunnel-800 mb-3 flex items-center gap-2" style={{ fontFamily: 'var(--font-display)' }}>
               🏠 Plant Out into Beds
             </h3>
