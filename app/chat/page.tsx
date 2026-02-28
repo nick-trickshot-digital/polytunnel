@@ -187,7 +187,7 @@ export default function ChatPage() {
             <div className="text-earth-500 text-lg font-medium">Loading chat history...</div>
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full gap-5">
+          <div className="flex flex-col items-center justify-center min-h-full gap-5 py-6">
             <Image
               src="/images/vickie.png"
               alt="Vickie, your growing assistant"
