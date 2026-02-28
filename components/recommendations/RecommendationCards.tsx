@@ -125,7 +125,7 @@ export function RecommendationCards({ onPlantAction, onTaskAction }: Recommendat
                 <span className="text-2xl md:text-lg flex-shrink-0">
                   {categoryIcons[rec.category] || '💡'}
                 </span>
-                <h4 className="flex-1 min-w-0 text-lg md:text-sm font-bold text-earth-900 truncate" style={{ fontFamily: 'var(--font-display)' }}>
+                <h4 className="flex-1 min-w-0 text-lg md:text-sm font-bold text-earth-900" style={{ fontFamily: 'var(--font-display)' }}>
                   {rec.title}
                 </h4>
                 <span className={`text-earth-500 text-lg md:text-sm flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}>
