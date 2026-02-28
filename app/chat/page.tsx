@@ -18,7 +18,7 @@ export default function ChatPage() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [confirmClear, setConfirmClear] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const showToast = useToast();
 
@@ -33,7 +33,8 @@ export default function ChatPage() {
   }, []);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = messagesContainerRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
   const handleSend = async () => {
@@ -130,7 +131,7 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-[calc(100dvh-5rem)] md:h-screen max-w-3xl mx-auto -mb-24 md:mb-0 overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-3 border-b border-earth-200 bg-white/90 backdrop-blur-sm">
+      <div className="px-5 py-3 border-b border-earth-200 bg-white/90 backdrop-blur-sm flex-shrink-0">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h1 className="text-2xl font-800 text-earth-800" style={{ fontFamily: 'var(--font-display)' }}>
@@ -168,7 +169,7 @@ export default function ChatPage() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 md:px-6 py-5 space-y-4">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-4 md:px-6 py-5 space-y-4">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-earth-500 text-lg font-medium">Loading chat history...</div>
@@ -244,7 +245,6 @@ export default function ChatPage() {
             </div>
           ))
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input area */}
