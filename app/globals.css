@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+
+  --color-earth-50: #FBF7F2;
+  --color-earth-100: #F3EBDE;
+  --color-earth-200: #E4D5BE;
+  --color-earth-300: #D0B794;
+  --color-earth-400: #B8916A;
+  --color-earth-500: #9A7553;
+  --color-earth-600: #7D5D3E;
+  --color-earth-700: #634A32;
+  --color-earth-800: #4D3926;
+  --color-earth-900: #3B2C1E;
+
+  --color-tunnel-50: #EDFAEE;
+  --color-tunnel-100: #D4F2D6;
+  --color-tunnel-200: #A8E4AC;
+  --color-tunnel-300: #6FCC76;
+  --color-tunnel-400: #45B34E;
+  --color-tunnel-500: #2E8C37;
+  --color-tunnel-600: #236D2B;
+  --color-tunnel-700: #1C5723;
+  --color-tunnel-800: #17451C;
+  --color-tunnel-900: #113617;
+
+  --color-terracotta-50: #FDF2ED;
+  --color-terracotta-100: #FBDFD2;
+  --color-terracotta-200: #F5BAA3;
+  --color-terracotta-300: #EE8F6B;
+  --color-terracotta-400: #E06A3D;
+  --color-terracotta-500: #C9501F;
+  --color-terracotta-600: #A73E17;
+  --color-terracotta-700: #843114;
+  --color-terracotta-800: #6A2913;
+  --color-terracotta-900: #552112;
+
+  --color-harvest-50: #FFFBE5;
+  --color-harvest-100: #FFF5BF;
+  --color-harvest-200: #FFEB80;
+  --color-harvest-300: #FFDD33;
+  --color-harvest-400: #F5C800;
+  --color-harvest-500: #D9A800;
+  --color-harvest-600: #B38500;
+  --color-harvest-700: #8C6800;
+  --color-harvest-800: #6B4F00;
+  --color-harvest-900: #4A3700;
+
+  --color-soil: #8B7355;
+  --color-soil-dark: #6B5B45;
+  --color-soil-light: #A69279;
+  --color-path: #D4C5A9;
+}
+
+/* ─── Base ─── */
+html {
+  font-size: 18px;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-earth-50);
+  color: var(--color-earth-900);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* ─── Typography ─── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  font-optical-sizing: auto;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-earth-100);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-earth-400);
+  border-radius: 4px;
+}
+
+/* ─── Animations ─── */
+@keyframes harvest-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 200, 0, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(245, 200, 0, 0); }
+}
+.harvest-ready {
+  animation: harvest-pulse 2s ease-in-out infinite;
+}
+
+@keyframes attention-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.needs-attention {
+  animation: attention-bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+/* Stagger children */
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+
+/* ─── Grain texture on cards ─── */
+.card-texture {
+  position: relative;
+}
+.card-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+/* ─── Touch-friendly minimum sizes ─── */
+button, a, [role="button"] {
+  min-height: 44px;
+}
+
+/* ─── Reduce visual noise: thinner default card borders ─── */
+.card {
+  background: white;
+  border: 1px solid var(--color-earth-200);
+  border-radius: 1rem;
+}
+.card-prominent {
+  background: white;
+  border: 2px solid var(--color-earth-200);
+  border-radius: 1rem;
+}
+
+/* ─── Selection colour ─── */
+::selection {
+  background-color: var(--color-tunnel-200);
+  color: var(--color-tunnel-900);
+}

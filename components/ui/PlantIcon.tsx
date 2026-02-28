@@ -1,0 +1,107 @@
+'use client';
+
+import Image from 'next/image';
+
+// Client-side image mapping (mirrors lib/plants/images.ts but usable in client components)
+const plantImages: Record<string, string> = {
+  'Tomatoes': '/images/plants/tomatoes.jpg',
+  'Cucumbers': '/images/plants/cucumbers.jpg',
+  'Peppers (Sweet)': '/images/plants/peppers-sweet.jpg',
+  'Chillies': '/images/plants/chillies.jpg',
+  'Aubergines': '/images/plants/aubergines.jpg',
+  'Lettuce': '/images/plants/lettuce.jpg',
+  'Basil': '/images/plants/basil.jpg',
+  'French Beans': '/images/plants/french-beans.jpg',
+  'Runner Beans': '/images/plants/runner-beans.jpg',
+  'Courgettes': '/images/plants/courgettes.jpg',
+  'Strawberries': '/images/plants/strawberries.jpg',
+  'Radishes': '/images/plants/radishes.jpg',
+  'Spinach': '/images/plants/spinach.jpg',
+  'Spring Onions': '/images/plants/spring-onions.jpg',
+  'Carrots': '/images/plants/carrots.jpg',
+  'Beetroot': '/images/plants/beetroot.jpg',
+  'Kale': '/images/plants/kale.jpg',
+  'Chard': '/images/plants/chard.jpg',
+  'Pak Choi': '/images/plants/pak-choi.jpg',
+  'Rocket': '/images/plants/rocket.jpg',
+  'Coriander': '/images/plants/coriander.jpg',
+  'Parsley': '/images/plants/parsley.jpg',
+  'Dill': '/images/plants/dill.jpg',
+  'Melon': '/images/plants/melon.jpg',
+  'Grapes': '/images/plants/grapes.jpg',
+  'Figs': '/images/plants/figs.jpg',
+  'Sweetcorn': '/images/plants/sweetcorn.jpg',
+  'Squash (Winter)': '/images/plants/squash-winter.jpg',
+  'Peas': '/images/plants/peas.jpg',
+  'Broad Beans': '/images/plants/broad-beans.jpg',
+  'Florence Fennel': '/images/plants/florence-fennel.jpg',
+  'Celery': '/images/plants/celery.jpg',
+  'Celeriac': '/images/plants/celeriac.jpg',
+  'Sweet Potatoes': '/images/plants/sweet-potatoes.jpg',
+  'Microgreens': '/images/plants/microgreens.jpg',
+  'Garlic': '/images/plants/garlic.jpg',
+  'Onions (Overwintering Sets)': '/images/plants/onions-overwintering-sets.jpg',
+  'Mint': '/images/plants/mint.jpg',
+  'Chives': '/images/plants/chives.jpg',
+  'Thyme': '/images/plants/thyme.jpg',
+  'Oregano': '/images/plants/oregano.jpg',
+  'Sorrel': '/images/plants/sorrel.jpg',
+  'Nasturtiums': '/images/plants/nasturtiums.jpg',
+  'Marigolds': '/images/plants/marigolds.jpg',
+  'Turnips': '/images/plants/turnips.jpg',
+  'Kohlrabi': '/images/plants/kohlrabi.jpg',
+  'Leeks': '/images/plants/leeks.jpg',
+  'Potatoes (Early)': '/images/plants/potatoes-early.jpg',
+  'Mangetout': '/images/plants/mangetout.jpg',
+  'Calabrese/Broccoli': '/images/plants/calabrese-broccoli.jpg',
+  'Spring Cabbage': '/images/plants/spring-cabbage.jpg',
+  'Mizuna': '/images/plants/mizuna.jpg',
+  'Mustard Greens': '/images/plants/mustard-greens.jpg',
+  'Land Cress': '/images/plants/land-cress.jpg',
+  'Endive': '/images/plants/endive.jpg',
+  'Perpetual Spinach': '/images/plants/perpetual-spinach.jpg',
+  'Okra': '/images/plants/okra.jpg',
+  'Raspberries': '/images/plants/raspberries.jpg',
+  'Rosemary': '/images/plants/rosemary.jpg',
+  'Sage': '/images/plants/sage.jpg',
+  'Lemon Balm': '/images/plants/lemon-balm.jpg',
+  'Tarragon (French)': '/images/plants/tarragon-french.jpg',
+  'Chervil': '/images/plants/chervil.jpg',
+  'Borage': '/images/plants/borage.jpg',
+  'Sunflowers': '/images/plants/sunflowers.jpg',
+  'Peaches': '/images/plants/peaches.jpg',
+  'Pumpkins': '/images/plants/pumpkins.jpg',
+  'Watercress': '/images/plants/watercress.jpg',
+};
+
+export function getPlantImageSrc(name: string): string | null {
+  return plantImages[name] || null;
+}
+
+interface PlantIconProps {
+  name: string;
+  /** Fallback emoji if no image exists */
+  fallback?: string;
+  /** Size in pixels (renders as a circle) */
+  size?: number;
+  className?: string;
+}
+
+export function PlantIcon({ name, fallback = '🌱', size = 32, className = '' }: PlantIconProps) {
+  const src = plantImages[name];
+
+  if (!src) {
+    return <span className={className} style={{ fontSize: size * 0.75 }}>{fallback}</span>;
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={name}
+      width={size}
+      height={size}
+      className={`rounded-full object-cover flex-shrink-0 ${className}`}
+      style={{ width: size, height: size }}
+    />
+  );
+}
