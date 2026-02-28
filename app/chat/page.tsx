@@ -129,7 +129,7 @@ export default function ChatPage() {
   ];
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-5rem)] md:h-screen max-w-3xl mx-auto -mb-24 md:mb-0 overflow-hidden">
+    <div className="flex flex-col fixed inset-x-0 top-0 bottom-20 bg-earth-50 md:static md:h-screen md:max-w-3xl md:mx-auto">
       {/* Header */}
       <div className="px-5 py-3 border-b border-earth-200 bg-white/90 backdrop-blur-sm flex-shrink-0">
         <div className="flex items-start justify-between gap-3">
