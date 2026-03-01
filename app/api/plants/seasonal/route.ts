@@ -90,9 +90,17 @@ export async function GET() {
         return a.id.localeCompare(b.id);
       });
 
+    // Group by action type for condensed display
+    const groups: { label: string; key: string; plants: typeof suggestions }[] = [
+      { label: 'Plant out now', key: 'transplant', plants: suggestions.filter(s => s.canTransplant) },
+      { label: 'Direct sow', key: 'directSow', plants: suggestions.filter(s => s.canDirectSow && !s.canTransplant) },
+      { label: 'Sow indoors', key: 'sowIndoors', plants: suggestions.filter(s => s.canSowIndoors && !s.canDirectSow && !s.canTransplant) },
+    ].filter(g => g.plants.length > 0);
+
     return NextResponse.json({
       month: currentMonth,
       suggestions,
+      groups,
       availableBeds,
     });
   } catch (error) {
