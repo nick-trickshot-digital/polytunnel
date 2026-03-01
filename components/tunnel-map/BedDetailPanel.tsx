@@ -97,10 +97,10 @@ export function BedDetailPanel({ bed, onClose, onRefresh }: BedDetailPanelProps)
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/40 z-40 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/40 z-[55] backdrop-blur-sm" onClick={onClose} />
 
       {/* Panel */}
-      <div role="dialog" aria-modal="true" aria-label={`Bed ${bed.id} details`} className="fixed bottom-0 left-0 right-0 md:bottom-auto md:top-0 md:right-0 md:left-auto md:w-[480px] z-50 bg-white rounded-t-3xl md:rounded-none md:rounded-l-3xl shadow-2xl max-h-[85vh] md:max-h-screen md:h-screen flex flex-col overflow-hidden animate-slide-up">
+      <div role="dialog" aria-modal="true" aria-label={`Bed ${bed.id} details`} className="fixed bottom-0 left-0 right-0 md:bottom-auto md:top-0 md:right-0 md:left-auto md:w-[480px] z-[56] bg-white rounded-t-3xl md:rounded-none md:rounded-l-3xl shadow-2xl max-h-[85vh] md:max-h-screen md:h-screen flex flex-col overflow-hidden animate-slide-up">
         {/* Header */}
         <div className="flex items-center justify-between p-5 md:p-6 border-b border-earth-200 bg-tunnel-50">
           <div>
@@ -392,7 +392,7 @@ export function BedDetailPanel({ bed, onClose, onRefresh }: BedDetailPanelProps)
         </div>
 
         {/* Action buttons */}
-        <div className="p-5 border-t border-earth-200 space-y-3">
+        <div className="p-5 border-t border-earth-200 space-y-3 flex-shrink-0">
           <button
             onClick={() => setShowAddPlanting(true)}
             className="w-full py-4 bg-tunnel-600 text-white rounded-2xl text-lg font-bold hover:bg-tunnel-700 transition-colors shadow-sm active:scale-[0.98]"
