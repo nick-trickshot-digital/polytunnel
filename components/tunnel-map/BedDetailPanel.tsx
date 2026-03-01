@@ -24,12 +24,15 @@ export function BedDetailPanel({ bed, onClose, onRefresh }: BedDetailPanelProps)
   const [showLogHarvest, setShowLogHarvest] = useState<PlantingData | null>(null);
   const [showFinishPlanting, setShowFinishPlanting] = useState<PlantingData | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
+  const [movingPlanting, setMovingPlanting] = useState<PlantingData | null>(null);
+  const [availableBeds, setAvailableBeds] = useState<Array<{ id: string; remainingSpace: number }>>([]);
+  const [movingToBed, setMovingToBed] = useState<number | null>(null);
   const toast = useToast();
 
   // Only close on Escape if no sub-modal is open
   const handleClose = useCallback(() => {
-    if (!showAddPlanting && !showPlanPlanting && !showLogHarvest && !showFinishPlanting) onClose();
-  }, [showAddPlanting, showPlanPlanting, showLogHarvest, showFinishPlanting, onClose]);
+    if (!showAddPlanting && !showPlanPlanting && !showLogHarvest && !showFinishPlanting && !movingPlanting) onClose();
+  }, [showAddPlanting, showPlanPlanting, showLogHarvest, showFinishPlanting, movingPlanting, onClose]);
   useModal(handleClose);
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
   const [deletingPlanting, setDeletingPlanting] = useState<number | null>(null);
@@ -91,6 +94,50 @@ export function BedDetailPanel({ bed, onClose, onRefresh }: BedDetailPanelProps)
       console.error('Failed to update planting status:', err);
     } finally {
       setUpdatingStatus(null);
+    }
+  };
+
+  const handleStartMove = async (p: PlantingData) => {
+    setMovingPlanting(p);
+    try {
+      const res = await fetch('/api/beds');
+      const beds: Array<{ id: string; plantings: Array<{ bedFraction: string; status: string }> }> = await res.json();
+      const withSpace = beds
+        .filter(b => b.id !== bed.id)
+        .map(b => {
+          const used = b.plantings
+            .filter(pl => pl.status !== 'finished' && pl.status !== 'failed')
+            .reduce((sum, pl) => sum + fractionToNumber(pl.bedFraction), 0);
+          return { id: b.id, remainingSpace: Math.max(0, 1 - used) };
+        })
+        .filter(b => b.remainingSpace >= fractionToNumber(p.bedFraction));
+      setAvailableBeds(withSpace);
+    } catch {
+      toast('Failed to load beds');
+      setMovingPlanting(null);
+    }
+  };
+
+  const handleMoveToBed = async (targetBedId: string) => {
+    if (!movingPlanting) return;
+    setMovingToBed(movingPlanting.id);
+    try {
+      const res = await fetch(`/api/plantings/${movingPlanting.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bedId: targetBedId }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to move planting');
+      }
+      toast(`Moved ${movingPlanting.plantName} to bed ${targetBedId}`);
+      setMovingPlanting(null);
+      onRefresh?.();
+    } catch (err) {
+      toast(err instanceof Error ? err.message : 'Failed to move planting');
+    } finally {
+      setMovingToBed(null);
     }
   };
 
@@ -250,6 +297,42 @@ export function BedDetailPanel({ bed, onClose, onRefresh }: BedDetailPanelProps)
                         </div>
                       )}
 
+                      {/* Move to different bed */}
+                      {movingPlanting?.id === p.id ? (
+                        <div className="space-y-2">
+                          <p className="text-sm font-semibold text-earth-700">Move to which bed?</p>
+                          {availableBeds.length === 0 ? (
+                            <p className="text-sm text-earth-500">No beds with enough space available.</p>
+                          ) : (
+                            <div className="flex flex-wrap gap-2">
+                              {availableBeds.map(b => (
+                                <button
+                                  key={b.id}
+                                  onClick={() => handleMoveToBed(b.id)}
+                                  disabled={movingToBed === p.id}
+                                  className="px-4 py-2.5 bg-blue-50 text-blue-700 rounded-xl text-sm font-semibold hover:bg-blue-100 transition-colors border border-blue-200"
+                                >
+                                  {b.id} ({Math.round(b.remainingSpace * 100)}% free)
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          <button
+                            onClick={() => setMovingPlanting(null)}
+                            className="text-sm text-earth-500 font-medium hover:text-earth-700"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleStartMove(p)}
+                          className="w-full text-sm px-4 py-3 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-colors font-semibold border border-blue-200"
+                        >
+                          Move to Different Bed
+                        </button>
+                      )}
+
                       {/* Delete record */}
                       <button
                         onClick={() => confirmDelete === p.id ? handleDeletePlanting(p.id) : setConfirmDelete(p.id)}
@@ -319,25 +402,62 @@ export function BedDetailPanel({ bed, onClose, onRefresh }: BedDetailPanelProps)
                     </div>
 
                     {/* Actions */}
-                    <div className="mt-3 pt-3 border-t border-blue-200 flex gap-2">
-                      <button
-                        onClick={() => handleStatusChange(p.id, 'growing')}
-                        disabled={updatingStatus === p.id}
-                        className="flex-1 text-sm px-4 py-2.5 bg-tunnel-600 text-white rounded-xl hover:bg-tunnel-700 transition-colors font-semibold"
-                      >
-                        I&apos;ve Planted It
-                      </button>
-                      <button
-                        onClick={() => confirmDelete === p.id ? handleDeletePlanting(p.id) : setConfirmDelete(p.id)}
-                        disabled={deletingPlanting === p.id}
-                        className={`text-sm px-4 py-2.5 rounded-xl transition-colors font-semibold border ${
-                          confirmDelete === p.id
-                            ? 'bg-red-50 text-red-600 border-red-300'
-                            : 'bg-white text-earth-500 border-earth-300 hover:text-red-500 hover:border-red-300'
+                    <div className="mt-3 pt-3 border-t border-blue-200 space-y-2">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleStatusChange(p.id, 'growing')}
+                          disabled={updatingStatus === p.id}
+                          className="flex-1 text-sm px-4 py-2.5 bg-tunnel-600 text-white rounded-xl hover:bg-tunnel-700 transition-colors font-semibold"
+                        >
+                          I&apos;ve Planted It
+                        </button>
+                        <button
+                          onClick={() => confirmDelete === p.id ? handleDeletePlanting(p.id) : setConfirmDelete(p.id)}
+                          disabled={deletingPlanting === p.id}
+                          className={`text-sm px-4 py-2.5 rounded-xl transition-colors font-semibold border ${
+                            confirmDelete === p.id
+                              ? 'bg-red-50 text-red-600 border-red-300'
+                              : 'bg-white text-earth-500 border-earth-300 hover:text-red-500 hover:border-red-300'
                         }`}
                       >
-                        {deletingPlanting === p.id ? '...' : confirmDelete === p.id ? 'Confirm?' : 'Cancel Plan'}
-                      </button>
+                          {deletingPlanting === p.id ? '...' : confirmDelete === p.id ? 'Confirm?' : 'Cancel Plan'}
+                        </button>
+                      </div>
+                      {/* Move planned planting */}
+                      {movingPlanting?.id === p.id ? (
+                        <div className="space-y-2">
+                          <p className="text-sm font-semibold text-blue-700">Move to which bed?</p>
+                          {availableBeds.length === 0 ? (
+                            <p className="text-sm text-earth-500">No beds with enough space.</p>
+                          ) : (
+                            <div className="flex flex-wrap gap-2">
+                              {availableBeds.map(b => (
+                                <button
+                                  key={b.id}
+                                  onClick={() => handleMoveToBed(b.id)}
+                                  disabled={movingToBed === p.id}
+                                  className="px-4 py-2.5 bg-blue-50 text-blue-700 rounded-xl text-sm font-semibold hover:bg-blue-100 transition-colors border border-blue-200"
+                                >
+                                  {b.id} ({Math.round(b.remainingSpace * 100)}% free)
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          <button
+                            onClick={() => setMovingPlanting(null)}
+                            className="text-sm text-earth-500 font-medium hover:text-earth-700"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleStartMove(p)}
+                          className="w-full text-sm px-4 py-2 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-colors font-medium border border-blue-200"
+                        >
+                          Move to Different Bed
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}

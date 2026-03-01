@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { plantings, cropHistory, harvests, tasks, photos } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { plantings, cropHistory, harvests, tasks, photos, beds } from '@/lib/db/schema';
+import { eq, and, ne } from 'drizzle-orm';
 import { getPlantFamily } from '@/lib/utils/rotation';
+import { fractionToNumber } from '@/lib/utils/companions';
 
 export async function PATCH(
   request: NextRequest,
@@ -18,6 +19,45 @@ export async function PATCH(
     if (body.notes !== undefined) updates.notes = body.notes;
     if (body.variety !== undefined) updates.variety = body.variety;
     if (body.bedFraction) updates.bedFraction = body.bedFraction;
+
+    // Move to a different bed
+    if (body.bedId) {
+      // Verify the destination bed exists
+      const destBed = await db.select().from(beds).where(eq(beds.id, body.bedId));
+      if (destBed.length === 0) {
+        return NextResponse.json({ error: 'Destination bed not found' }, { status: 404 });
+      }
+
+      // Get the planting being moved
+      const existing = await db.select().from(plantings).where(eq(plantings.id, plantingId));
+      if (existing.length === 0) {
+        return NextResponse.json({ error: 'Planting not found' }, { status: 404 });
+      }
+      const planting = existing[0];
+
+      // Check space in destination bed
+      const destPlantings = await db.select().from(plantings).where(
+        and(eq(plantings.bedId, body.bedId), ne(plantings.status, 'finished'), ne(plantings.status, 'failed'))
+      );
+      const destUsed = destPlantings.reduce((sum, p) => sum + fractionToNumber(p.bedFraction), 0);
+      const movingFraction = fractionToNumber(body.bedFraction || planting.bedFraction);
+      if (destUsed + movingFraction > 1.001) { // small tolerance for floating point
+        return NextResponse.json({ error: `Not enough space in bed ${body.bedId} (${Math.round((1 - destUsed) * 100)}% available)` }, { status: 400 });
+      }
+
+      updates.bedId = body.bedId;
+      const oldBedId = planting.bedId;
+
+      // Update linked task titles that reference the old bed
+      const linkedTasks = await db.select().from(tasks).where(
+        and(eq(tasks.plantingId, plantingId), eq(tasks.isCompleted, false))
+      );
+      for (const task of linkedTasks) {
+        if (task.title.includes(oldBedId)) {
+          await db.update(tasks).set({ title: task.title.replace(oldBedId, body.bedId) }).where(eq(tasks.id, task.id));
+        }
+      }
+    }
 
     // Activating a planned planting: set datePlanted and recalculate harvest dates
     if (body.status === 'growing') {

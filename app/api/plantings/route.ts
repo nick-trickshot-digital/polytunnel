@@ -5,14 +5,18 @@ import { plantings, tasks } from '@/lib/db/schema';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { bedId, plantName, variety, datePlanted, dateSown, bedFraction, notes,
+    const { bedId, plantName: rawPlantName, variety, datePlanted, dateSown, bedFraction, notes,
             mode, plannedSowDate, plannedTransplantDate } = body;
 
     const isPlanned = mode === 'planned';
 
-    if (!bedId || !plantName) {
+    if (!bedId || !rawPlantName) {
       return NextResponse.json({ error: 'bedId and plantName are required' }, { status: 400 });
     }
+
+    // Auto-capitalise plant name (e.g. "blueberries" → "Blueberries")
+    const plantName = rawPlantName.replace(/\b\w/g, (c: string) => c.toUpperCase());
+
     if (!isPlanned && !datePlanted) {
       return NextResponse.json({ error: 'datePlanted is required for active plantings' }, { status: 400 });
     }

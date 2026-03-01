@@ -4,18 +4,17 @@ import { BASE_SYSTEM_PROMPT } from '@/lib/ai/system-prompt';
 import { buildTunnelContext } from '@/lib/ai/context-builder';
 import { RECOMMENDATION_PROMPT } from '@/lib/ai/prompts';
 
-// Cache recommendations
+// Cache recommendations with stale-while-revalidate pattern
 let cachedRecommendations: unknown[] | null = null;
 let cacheTime = 0;
-const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
+let isRefreshing = false;
+const CACHE_DURATION = 2 * 60 * 60 * 1000; // 2 hours fresh
+const STALE_DURATION = 24 * 60 * 60 * 1000; // serve stale up to 24h while refreshing in background
 
-export async function GET() {
+async function refreshRecommendations() {
+  if (isRefreshing) return;
+  isRefreshing = true;
   try {
-    // Return cached if fresh
-    if (cachedRecommendations && Date.now() - cacheTime < CACHE_DURATION) {
-      return NextResponse.json(cachedRecommendations);
-    }
-
     const anthropic = getAnthropicClient();
     const tunnelContext = await buildTunnelContext();
 
@@ -31,7 +30,6 @@ export async function GET() {
 
     const text = response.content[0].type === 'text' ? response.content[0].text : '';
 
-    // Parse JSON from response (handle potential markdown wrapping)
     let recommendations;
     try {
       const jsonMatch = text.match(/\[[\s\S]*\]/);
@@ -42,10 +40,33 @@ export async function GET() {
 
     cachedRecommendations = recommendations;
     cacheTime = Date.now();
+  } catch (error) {
+    console.error('Recommendations refresh error:', error);
+  } finally {
+    isRefreshing = false;
+  }
+}
 
-    return NextResponse.json(recommendations);
+export async function GET() {
+  try {
+    const age = Date.now() - cacheTime;
+
+    // Fresh cache — return immediately
+    if (cachedRecommendations && age < CACHE_DURATION) {
+      return NextResponse.json(cachedRecommendations);
+    }
+
+    // Stale cache — return immediately but refresh in background
+    if (cachedRecommendations && age < STALE_DURATION) {
+      refreshRecommendations(); // fire-and-forget
+      return NextResponse.json(cachedRecommendations);
+    }
+
+    // No cache at all — must wait for first fetch
+    await refreshRecommendations();
+    return NextResponse.json(cachedRecommendations || []);
   } catch (error) {
     console.error('Recommendations error:', error);
-    return NextResponse.json([]);
+    return NextResponse.json(cachedRecommendations || []);
   }
 }
