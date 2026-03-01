@@ -326,7 +326,7 @@ export default function HomePage() {
                       {categoryIcons[task.category] || '📌'}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <span className="text-base md:text-sm font-bold text-earth-800 block truncate">
+                      <span className="text-base md:text-sm font-bold text-earth-800 block">
                         {task.title}
                       </span>
                       {task.dueDate && (
